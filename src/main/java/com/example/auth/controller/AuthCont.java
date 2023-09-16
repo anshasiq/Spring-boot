@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 @Controller
 public class AuthCont {
     @Autowired
@@ -39,16 +42,35 @@ public class AuthCont {
         return new RedirectView("login");
     }
     @PostMapping("/login")
-    public RedirectView logInUser(String username, String password){
+    public RedirectView logInUser(HttpServletRequest request, String username, String password){
         SiteUser userFromDb=repo.findByUsername(username);
-//        if((userFromDb == null)
-//           || !(userFromDb.getPassword().equals(password))){
-//           return new RedirectView("/login");
-//       }
         if((userFromDb == null)
                 || (!BCrypt.checkpw(password, userFromDb.getPassword())))
         {
             return new RedirectView("/login");
         }
+        HttpSession session= request.getSession();
+        session.setAttribute("username", username);
+        session.setAttribute("id", userFromDb);
+        return new RedirectView("/withSecret");
+}
+    @PostMapping("logoutWithSecret")
+    public RedirectView logOutUserWithSecret(HttpServletRequest request){
+
+        HttpSession session= request.getSession();
+        session.invalidate();
+
         return new RedirectView("/");
-}}
+    }
+
+
+
+
+}
+
+
+
+//        if((userFromDb == null)
+//           || !(userFromDb.getPassword().equals(password))){
+//           return new RedirectView("/login");
+//       }
