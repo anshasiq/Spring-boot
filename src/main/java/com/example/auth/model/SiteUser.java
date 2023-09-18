@@ -1,9 +1,7 @@
 package com.example.auth.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 
@@ -14,6 +12,10 @@ public class SiteUser {
     private String username;
     private String password;
 
+    @OneToMany(mappedBy = "user" , cascade = CascadeType.ALL)
+    private List<Posts> posts;
+
+
     public SiteUser(String username, String password) {
         this.username = username;
         this.password = password;
@@ -22,7 +24,7 @@ public class SiteUser {
     public SiteUser() {
     }
 
-    public Long getId() {
+    public  Long getId() {
         return id;
     }
 
@@ -42,4 +44,6 @@ public class SiteUser {
     public void setPassword(String password) {
         this.password = password;
     }
+
+
 }
