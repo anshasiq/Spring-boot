@@ -30,7 +30,7 @@ public class HomeControl {
         m.addAttribute("username", username);
         List<Posts> posts = Repo.findAll();
         model.addAttribute("posts", posts);
-        return "indexWithSecret.html";
+        return "secret.html";
     }
     @PostMapping("/addpost")
     public RedirectView addpost(HttpServletRequest request , String content){
